@@ -1,4 +1,3 @@
-//this is my tutorials js file
 /* Example from Leaflet Quick Start Guide*/
 
 var map = L.map('map').setView([51.505, -0.09], 5);
