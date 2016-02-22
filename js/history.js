@@ -1,3 +1,46 @@
+//main.js
+/* Map of GeoJSON data from MegaCities.geojson */
+
+//function to instantiate the Leaflet map
+function createMap(){
+    //create the map
+    var map = L.map('map', {
+        center: [20, 0],
+        zoom: 13 
+    });
+
+    //add OSM base tilelayer
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+    }).addTo(map);
+
+    //call getData function
+    getData(map);
+};
+var geojsonFeature = {
+    "type": "Feature",
+    "properties": {
+        "City": "City",
+        "Pop_1985": ""
+    }
+}
+//function to retrieve the data and place it on the map
+function getData(map){
+    //load the data
+    $.ajax("data/MegaCities.geojson", {
+        dataType: "json",
+        success: function(response){
+
+            //create a Leaflet GeoJSON layer and add it to the map
+            L.geoJson(response).addTo(map);
+        }
+    });
+};
+
+$(document).ready(createMap);
+
+
+///tutorials.js
 //this is my tutorials js file
 /* Example from Leaflet Quick Start Guide*/
 
@@ -133,3 +176,70 @@ L.geoJson(someGeojsonFeature, {
 }).addTo(map);
 L.geoJson(geojsonFeature).addTo(map);
 map.on('click', onMapClick);
+
+///main.js at feb21
+//main.js
+/* Map of GeoJSON data from MegaCities.geojson */
+
+//function to instantiate the Leaflet map
+function createMap(){
+    //create the map
+    var map = L.map('map', {
+        center: [20, 0],
+        zoom: 13 
+    });
+
+    //add OSM base tilelayer
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+    }).addTo(map);
+
+    //call getData function
+    getData(map);
+};
+var geojsonFeature = {
+    "type": "Feature",
+    "properties": {
+        "City": "City",
+        "Pop_1985": ""
+    }
+}
+//function to retrieve the data and place it on the map
+function getData(map){
+    //load the data
+    $.ajax("data/MegaCities.geojson", {
+        dataType: "json",
+        success: function(response){
+
+            //create a Leaflet GeoJSON layer and add it to the map
+            L.geoJson(response).addTo(map);
+        }
+    });
+};
+
+$(document).ready(createMap);
+
+
+
+///from geojson
+///doesn't work because it needs a click on function
+var geojsonFeature = {
+    "type" : "Feature",
+    "properties" : {
+        "name": "Coors Field",
+        "amenity":"Baseball Stadium",
+        "popupContent": "This is where the Rockies play!"
+    },
+    "geometry": {
+        "type":"Point",
+        "cooridnates": [-104.99404,39.75621]
+    }
+};
+
+geojsonFeature.addTo(map);
+
+////////////////////////
+
+/////////////////////
+//
+///////////////////////

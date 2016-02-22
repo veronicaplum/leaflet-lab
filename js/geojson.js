@@ -10,7 +10,8 @@ function createMap(){
     });
 
     //add OSM base tilelayer
- L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+
+   L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',
 	minZoom: 1,
 	maxZoom: 16,
@@ -38,7 +39,7 @@ function onEachFeature(feature, layer) {
 function getData(map){
     //load the data
     //Example 2.3 line 22...load the data
-    $.ajax("data/CNTour.geojson", {
+    $.ajax("data/MegaCities.geojson", {
         dataType: "json",
         success: function(response){
             //create marker options
