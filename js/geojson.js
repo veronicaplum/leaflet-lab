@@ -16,7 +16,7 @@ function createMap(){
 	minZoom: 1,
 	maxZoom: 16,
 
-}).addTo(map);
+   }).addTo(map);
 
     //call getData function
     getData(map);
