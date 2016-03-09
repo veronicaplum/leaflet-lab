@@ -1,4 +1,7 @@
+//works
+//Object initialization issues
 /* CNTour.geojson/ MOD5 COMPLETE / MISSING 5th operator */
+
 
 //function to instantiate the Leaflet map
 function createMap(){
@@ -54,11 +57,6 @@ function processData(data){
             attributes.push(attribute);
         };
     };
-    console.log("checkmate");
-    console.log(attributes);
-   
- console.log(attributes);
-    
     return attributes;
 };
 
@@ -97,7 +95,7 @@ function createSequenceControls(map, attributes){
         };
         updatePropSymbols(map, attributes[index]);
         //Step 8: update slider
-        $('.range-slider').val(index);
+       // $('.range-slider').val(index);
     });
 
     //Step 5: input listener for slider
@@ -115,7 +113,7 @@ function createSequenceControls(map, attributes){
 //calculate the radius of each proportional symbol
 function calcPropRadius(attValue) {
     //scale factor to adjust symbol size evenly
-    var scaleFactor = 0.008;
+    var scaleFactor = 0.009;
     //area based on attribute value and scale factor
     var area = attValue * scaleFactor;
     //radius calculated based on area
@@ -132,32 +130,42 @@ function createPropSymbols(data, map, attributes){
     }).addTo(map);
 };
 
-//update prop Symbols via information provided by the index listeners
-function updatePropSymbols(map, attribute){
-    console.log(attribute);
-    console.log("map");
-    map.eachLayer(function(layer){
-       // console.log(feature);
-        console.log("feature");
-        console.log(layer.feature);
-        if (layer.feature && layer.feature.properties[attribute]){
-            //access feature properties
-            var props = layer.feature.properties;
+//function that creates popUp info dialogues
+function createPopup(properties, attribute, layer, radius){
 
-            //update each feature's radius based on new attribute values
-            var radius = calcPropRadius(props[attribute]);
-            layer.setRadius(radius);
-
-    //create original pop-up content
-    var popupContent = "<p><b>Country:</b> " + props.Country + "</p>";
+      //create original pop-up content
+    var popupContent = "<p><b>Country:</b> " + properties.Country + "</p>";
 
     //add formatted attribute to popup content string
     var year = attribute.split("_")[1];
-    popupContent += "<p><b>Tourists in China in " + year + ":</b> " + props[attribute] + " </p>";
+    popupContent += "<p><b>Tourists in China in " + year + ":</b> " + properties[attribute] + " </p>";
             //replace the layer popup
             layer.bindPopup(popupContent, {
                 offset: new L.Point(0,-radius)
+                
             });
+};
+//Popup constructor
+
+
+//update prop Symbols via information provided by the index listeners
+function updatePropSymbols(map, attribute){
+ 
+    map.eachLayer(function(layer){
+   
+        if (layer.feature && layer.feature.properties[attribute]){
+            //access feature properties
+            var properties = layer.feature.properties;
+
+            //update each feature's radius based on new attribute values
+            var radius = calcPropRadius(properties[attribute]);
+            layer.setRadius(radius);
+            
+             //create popup info dialogues
+            createPopup(properties, attribute, layer, radius);
+           // var popup = new Popup(properties, attribute, layer, radius);
+            
+           // popup.bindToLayer();
         };
     }); 
  
@@ -165,7 +173,7 @@ function updatePropSymbols(map, attribute){
 //function to convert markers to circle markers
 function pointToLayer(feature, latlng, attributes){
     //Determine which attribute to visualize with proportional symbols
-    var attribute = attributes[0];//Cant be 0!//Correction now can be 0, and SHOULD be zero at certain points due to change in processData function, thus removing "Country" string from array. 
+    var attribute = attributes[0];
     console.log(attribute);
     //create marker options
     var options = {
@@ -184,23 +192,12 @@ function pointToLayer(feature, latlng, attributes){
 
     //create circle marker layer //for proprotional
     var layer = L.circleMarker(latlng, options); 
-    //for dots
-    //   var layer = L.marker(latlng, {
-    //       title: feature.properties.City
-    //  });
+ 
+    //create popup info dialogues
+   createPopup(feature.properties, attribute, layer, options.radius);
+    //var popup= new Popup(feature.properties, attribute, layer, options.radius);
     
-    //popup content string
-    var popupContent = "<p><b>Country:</b> " + feature.properties.Country + "</p>";
-
-    //additonal info added to content string, with refined paragraph spacing
-    var year = attribute.split("_")[1];
-    popupContent += "<p><b>Tourists in China in " + year + ":</b> " +          feature.properties[attribute] + " </p>";
-
-      //bind the popup to the circle marker
-    layer.bindPopup(popupContent, {
-        offset: new L.Point(0,-options.radius),
-        closeButton: false
-    });
+  //  popup.bindToLayer();
 
     //event listeners to open popup on hover and fill panel on click
     layer.on({
